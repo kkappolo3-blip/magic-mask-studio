@@ -4,11 +4,19 @@ import UploadCard from "@/components/UploadCard";
 import MaskingCanvas from "@/components/MaskingCanvas";
 import GenerateTimeline from "@/components/GenerateTimeline";
 import BeforeAfterSlider from "@/components/BeforeAfterSlider";
+import OnboardingOverlay from "@/components/OnboardingOverlay";
 import { Sparkles } from "lucide-react";
 
 type AppState = "upload" | "masking" | "generating" | "preview";
 
 const spring = { type: "spring" as const, stiffness: 250, damping: 25 };
+
+const stateLabels: Record<AppState, string> = {
+  upload: "Siap",
+  masking: "Mengarsir",
+  generating: "Memproses",
+  preview: "Selesai",
+};
 
 const Index = () => {
   const [state, setState] = useState<AppState>("upload");
@@ -63,6 +71,8 @@ const Index = () => {
 
   return (
     <div className="min-h-screen mesh-gradient-bg max-w-lg mx-auto relative overflow-hidden">
+      <OnboardingOverlay />
+
       {/* Top Nav */}
       <div className="sticky top-0 z-50 glass-nav px-5 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -72,67 +82,32 @@ const Index = () => {
           <span className="font-bold text-foreground tracking-tight">AI Magic</span>
         </div>
         <span className="text-xs font-medium text-muted-foreground ios-pill bg-secondary/60">
-          {state === "upload" && "Ready"}
-          {state === "masking" && "Masking"}
-          {state === "generating" && "Processing"}
-          {state === "preview" && "Complete"}
+          {stateLabels[state]}
         </span>
       </div>
 
       <AnimatePresence mode="wait">
         {state === "upload" && (
-          <motion.div
-            key="upload"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
-            transition={spring}
-          >
+          <motion.div key="upload" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }} transition={spring}>
             <UploadCard onVideoSelect={captureLastFrame} />
           </motion.div>
         )}
 
         {state === "masking" && (
-          <motion.div
-            key="masking"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
-            transition={spring}
-          >
-            <MaskingCanvas
-              frameImage={lastFrame}
-              onDone={handleMaskDone}
-              onGenerate={handleGenerate}
-            />
+          <motion.div key="masking" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }} transition={spring}>
+            <MaskingCanvas frameImage={lastFrame} onDone={handleMaskDone} onGenerate={handleGenerate} />
           </motion.div>
         )}
 
         {state === "generating" && (
-          <motion.div
-            key="generating"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={spring}
-          >
+          <motion.div key="generating" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={spring}>
             <GenerateTimeline onComplete={handleGenerateComplete} />
           </motion.div>
         )}
 
         {state === "preview" && (
-          <motion.div
-            key="preview"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={spring}
-          >
-            <BeforeAfterSlider
-              beforeImage={lastFrame}
-              maskData={maskData}
-              onReset={handleReset}
-            />
+          <motion.div key="preview" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={spring}>
+            <BeforeAfterSlider beforeImage={lastFrame} maskData={maskData} onReset={handleReset} />
           </motion.div>
         )}
       </AnimatePresence>

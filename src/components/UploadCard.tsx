@@ -51,7 +51,7 @@ const UploadCard = ({ onVideoSelect }: UploadCardProps) => {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.35 }}
       >
-        Seamless transitions, powered by AI
+        Transisi mulus, ditenagai oleh AI
       </motion.p>
 
       <motion.button
@@ -66,8 +66,8 @@ const UploadCard = ({ onVideoSelect }: UploadCardProps) => {
           <Upload className="w-8 h-8 text-accent-foreground" />
         </div>
         <div className="text-center">
-          <p className="text-lg font-bold text-foreground">Upload Video</p>
-          <p className="text-sm text-muted-foreground mt-1">Tap to select a video file</p>
+          <p className="text-lg font-bold text-foreground">Pilih Video</p>
+          <p className="text-sm text-muted-foreground mt-1">Ketuk untuk memilih dari galeri</p>
         </div>
       </motion.button>
 
@@ -77,7 +77,7 @@ const UploadCard = ({ onVideoSelect }: UploadCardProps) => {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
       >
-        Supports MP4, MOV, WebM
+        Mendukung MP4, MOV, WebM
       </motion.p>
 
       <input
