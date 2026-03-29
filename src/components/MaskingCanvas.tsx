@@ -36,9 +36,7 @@ const MaskingCanvas = ({ frameImage, onDone, onGenerate }: MaskingCanvasProps) =
         maskCanvas.height = h;
 
         const ctx = canvas.getContext("2d");
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, w, h);
-        }
+        if (ctx) ctx.drawImage(img, 0, 0, w, h);
       });
     };
     img.src = frameImage;
@@ -75,12 +73,10 @@ const MaskingCanvas = ({ frameImage, onDone, onGenerate }: MaskingCanvasProps) =
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.globalCompositeOperation = "source-over";
-
     ctx.beginPath();
     ctx.moveTo(from.x, from.y);
     ctx.lineTo(to.x, to.y);
     ctx.stroke();
-
     ctx.beginPath();
     ctx.arc(to.x, to.y, brushSize / 2, 0, Math.PI * 2);
     ctx.fill();
@@ -109,9 +105,7 @@ const MaskingCanvas = ({ frameImage, onDone, onGenerate }: MaskingCanvasProps) =
     if (!isDrawing) return;
     e.preventDefault();
     const pos = getPos(e);
-    if (lastPosRef.current) {
-      drawLine(lastPosRef.current, pos);
-    }
+    if (lastPosRef.current) drawLine(lastPosRef.current, pos);
     lastPosRef.current = pos;
   };
 
@@ -124,9 +118,7 @@ const MaskingCanvas = ({ frameImage, onDone, onGenerate }: MaskingCanvasProps) =
     if (navigator.vibrate) navigator.vibrate(15);
     saveHistory();
     const ctx = maskCanvasRef.current?.getContext("2d");
-    if (ctx && maskCanvasRef.current) {
-      ctx.clearRect(0, 0, maskCanvasRef.current.width, maskCanvasRef.current.height);
-    }
+    if (ctx && maskCanvasRef.current) ctx.clearRect(0, 0, maskCanvasRef.current.width, maskCanvasRef.current.height);
   };
 
   const undo = () => {
@@ -139,9 +131,7 @@ const MaskingCanvas = ({ frameImage, onDone, onGenerate }: MaskingCanvasProps) =
   };
 
   const handleGenerate = () => {
-    if (maskCanvasRef.current) {
-      onDone(maskCanvasRef.current.toDataURL());
-    }
+    if (maskCanvasRef.current) onDone(maskCanvasRef.current.toDataURL());
     onGenerate();
   };
 
@@ -151,8 +141,8 @@ const MaskingCanvas = ({ frameImage, onDone, onGenerate }: MaskingCanvasProps) =
       animate={{ opacity: 1, y: 0 }}
       className="flex flex-col items-center px-6 pt-6 pb-48"
     >
-      <h2 className="text-xl font-bold text-foreground mb-1">Magic Mask</h2>
-      <p className="text-sm text-muted-foreground mb-5">Paint over the objects to transform</p>
+      <h2 className="text-xl font-bold text-foreground mb-1">Kanvas Ajaib</h2>
+      <p className="text-sm text-muted-foreground mb-5">Arsir objek yang ingin kamu ubah</p>
 
       <div
         className="relative rounded-2xl overflow-hidden"
@@ -178,7 +168,7 @@ const MaskingCanvas = ({ frameImage, onDone, onGenerate }: MaskingCanvasProps) =
         <div className="flex items-center justify-between mb-3">
           <span className="text-sm font-medium text-foreground flex items-center gap-2">
             <Paintbrush className="w-4 h-4 text-primary" />
-            Brush Size
+            Ukuran Kuas
           </span>
           <span className="text-sm font-bold text-primary">{brushSize}px</span>
         </div>
@@ -202,7 +192,7 @@ const MaskingCanvas = ({ frameImage, onDone, onGenerate }: MaskingCanvasProps) =
               className="ios-button-press flex items-center justify-center gap-1.5 px-4 py-3 rounded-full text-sm font-medium text-foreground hover:bg-secondary/50 transition-colors"
             >
               <Undo2 className="w-4 h-4" />
-              Undo
+              Urung
             </motion.button>
             <motion.button
               whileTap={{ scale: 0.9 }}
@@ -210,7 +200,7 @@ const MaskingCanvas = ({ frameImage, onDone, onGenerate }: MaskingCanvasProps) =
               className="ios-button-press flex items-center justify-center gap-1.5 px-4 py-3 rounded-full text-sm font-medium text-foreground hover:bg-secondary/50 transition-colors"
             >
               <Eraser className="w-4 h-4" />
-              Clear
+              Hapus
             </motion.button>
             <motion.button
               whileTap={{ scale: 0.93 }}
@@ -219,7 +209,7 @@ const MaskingCanvas = ({ frameImage, onDone, onGenerate }: MaskingCanvasProps) =
               style={{ backgroundSize: "200% 100%" }}
             >
               <Sparkles className="w-4 h-4" />
-              Generate Magic
+              Mulai Keajaiban
             </motion.button>
           </div>
         </div>

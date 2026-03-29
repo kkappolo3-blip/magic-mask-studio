@@ -20,9 +20,7 @@ const BeforeAfterSlider = ({ beforeImage, maskData, onReset }: BeforeAfterSlider
     img.onload = () => {
       const maxW = Math.min(window.innerWidth - 48, 400);
       const ratio = img.height / img.width;
-      const w = maxW;
-      const h = w * ratio;
-      setDimensions({ width: w, height: h });
+      setDimensions({ width: maxW, height: maxW * ratio });
 
       const canvas = document.createElement("canvas");
       canvas.width = img.width;
@@ -31,11 +29,9 @@ const BeforeAfterSlider = ({ beforeImage, maskData, onReset }: BeforeAfterSlider
       if (ctx) {
         ctx.filter = "saturate(1.6) contrast(1.15) brightness(1.05)";
         ctx.drawImage(img, 0, 0);
-
         ctx.globalCompositeOperation = "overlay";
         ctx.fillStyle = "hsla(211, 100%, 50%, 0.12)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-
         ctx.globalCompositeOperation = "screen";
         const gradient = ctx.createRadialGradient(
           canvas.width * 0.3, canvas.height * 0.4, 0,
@@ -45,7 +41,6 @@ const BeforeAfterSlider = ({ beforeImage, maskData, onReset }: BeforeAfterSlider
         gradient.addColorStop(1, "transparent");
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-
         setAfterImage(canvas.toDataURL());
       }
     };
@@ -71,14 +66,10 @@ const BeforeAfterSlider = ({ beforeImage, maskData, onReset }: BeforeAfterSlider
     updateSlider(clientX);
   };
 
-  const handleEnd = () => {
-    isDragging.current = false;
-  };
+  const handleEnd = () => { isDragging.current = false; };
 
   const handleDownload = () => {
     if (navigator.vibrate) navigator.vibrate(20);
-
-    // Package frame + mask into a downloadable zip-like bundle
     const canvas = document.createElement("canvas");
     const img = new Image();
     img.onload = () => {
@@ -86,13 +77,9 @@ const BeforeAfterSlider = ({ beforeImage, maskData, onReset }: BeforeAfterSlider
       canvas.height = img.height;
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
-
-      // Draw the after image
       ctx.filter = "saturate(1.6) contrast(1.15) brightness(1.05)";
       ctx.drawImage(img, 0, 0);
       ctx.filter = "none";
-
-      // Overlay the mask if available
       if (maskData) {
         const maskImg = new Image();
         maskImg.onload = () => {
@@ -112,7 +99,7 @@ const BeforeAfterSlider = ({ beforeImage, maskData, onReset }: BeforeAfterSlider
   const triggerDownload = (dataUrl: string) => {
     const link = document.createElement("a");
     link.href = dataUrl;
-    link.download = "ai-magic-result.png";
+    link.download = "ai-magic-hasil.png";
     link.click();
   };
 
@@ -130,8 +117,8 @@ const BeforeAfterSlider = ({ beforeImage, maskData, onReset }: BeforeAfterSlider
       transition={{ type: "spring", stiffness: 250, damping: 25 }}
       className="flex flex-col items-center px-6 pt-6 pb-32"
     >
-      <h2 className="text-xl font-bold text-foreground mb-1">Your Magic ✨</h2>
-      <p className="text-sm text-muted-foreground mb-5">Swipe to compare before & after</p>
+      <h2 className="text-xl font-bold text-foreground mb-1">Hasil Keajaiban ✨</h2>
+      <p className="text-sm text-muted-foreground mb-5">Geser untuk membandingkan sebelum & sesudah</p>
 
       <div
         ref={containerRef}
@@ -145,12 +132,11 @@ const BeforeAfterSlider = ({ beforeImage, maskData, onReset }: BeforeAfterSlider
         onMouseUp={handleEnd}
         onMouseLeave={handleEnd}
       >
-        <img src={afterImage} alt="After" className="absolute inset-0 w-full h-full object-cover" draggable={false} />
-
+        <img src={afterImage} alt="Sesudah" className="absolute inset-0 w-full h-full object-cover" draggable={false} />
         <div className="absolute inset-0 overflow-hidden" style={{ width: `${sliderPos}%` }}>
           <img
             src={beforeImage}
-            alt="Before"
+            alt="Sebelum"
             className="absolute inset-0 object-cover"
             style={{ width: dimensions.width, height: dimensions.height }}
             draggable={false}
@@ -172,10 +158,10 @@ const BeforeAfterSlider = ({ beforeImage, maskData, onReset }: BeforeAfterSlider
         </div>
 
         <div className="absolute top-3 left-3 ios-pill bg-card/70 backdrop-blur-sm text-foreground text-xs" style={{ border: "1px solid hsla(0,0%,100%,0.15)" }}>
-          Before
+          Sebelum
         </div>
         <div className="absolute top-3 right-3 ios-pill bg-primary/90 backdrop-blur-sm text-primary-foreground text-xs">
-          After ✨
+          Sesudah ✨
         </div>
       </div>
 
@@ -186,7 +172,7 @@ const BeforeAfterSlider = ({ beforeImage, maskData, onReset }: BeforeAfterSlider
           className="ios-button-press flex-1 py-3 rounded-full font-semibold text-sm flex items-center justify-center gap-2 bg-secondary text-secondary-foreground"
         >
           <RotateCcw className="w-4 h-4" />
-          New
+          Baru
         </motion.button>
         <motion.button
           whileTap={{ scale: 0.95 }}
@@ -195,7 +181,7 @@ const BeforeAfterSlider = ({ beforeImage, maskData, onReset }: BeforeAfterSlider
           style={{ boxShadow: "var(--shadow-button)" }}
         >
           <Download className="w-4 h-4" />
-          Download Project
+          Unduh Hasil
         </motion.button>
       </div>
     </motion.div>

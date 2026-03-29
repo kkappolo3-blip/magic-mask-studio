@@ -7,10 +7,10 @@ interface GenerateTimelineProps {
 }
 
 const steps = [
-  { label: "Video Uploaded", icon: Video },
-  { label: "Frame Captured", icon: Frame },
-  { label: "AI Thinking...", icon: Sparkles },
-  { label: "Stitching Magic", icon: Wand2 },
+  { label: "Video Diunggah", icon: Video },
+  { label: "Frame Ditangkap", icon: Frame },
+  { label: "AI Sedang Berpikir...", icon: Sparkles },
+  { label: "Merangkai Keajaiban", icon: Wand2 },
 ];
 
 const GenerateTimeline = ({ onComplete }: GenerateTimelineProps) => {
@@ -52,10 +52,10 @@ const GenerateTimeline = ({ onComplete }: GenerateTimelineProps) => {
       </motion.div>
 
       <h2 className="text-2xl font-bold text-foreground mb-1">
-        {currentStep < 4 ? "Creating Magic..." : "Done! 🎉"}
+        {currentStep < 4 ? "Menciptakan Keajaiban..." : "Selesai! 🎉"}
       </h2>
       <p className="text-sm text-muted-foreground mb-10">
-        {currentStep < 4 ? "This won't take long" : "Your transition is ready"}
+        {currentStep < 4 ? "Ini tidak akan lama" : "Transisi kamu sudah siap"}
       </p>
 
       <div className="w-full max-w-xs space-y-0">
@@ -85,11 +85,7 @@ const GenerateTimeline = ({ onComplete }: GenerateTimelineProps) => {
 
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${
-                  done
-                    ? "bg-primary"
-                    : active
-                    ? "bg-accent border-2 border-primary"
-                    : "bg-secondary"
+                  done ? "bg-primary" : active ? "bg-accent border-2 border-primary" : "bg-secondary"
                 }`}
               >
                 {done ? (
