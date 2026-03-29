@@ -2,16 +2,18 @@ import { useState, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import UploadCard from "@/components/UploadCard";
 import MaskingCanvas from "@/components/MaskingCanvas";
-import GenerateButton from "@/components/GenerateButton";
 import GenerateTimeline from "@/components/GenerateTimeline";
 import BeforeAfterSlider from "@/components/BeforeAfterSlider";
+import { Sparkles } from "lucide-react";
 
 type AppState = "upload" | "masking" | "generating" | "preview";
+
+const spring = { type: "spring" as const, stiffness: 250, damping: 25 };
 
 const Index = () => {
   const [state, setState] = useState<AppState>("upload");
   const [lastFrame, setLastFrame] = useState<string>("");
-  const [, setMaskData] = useState<string>("");
+  const [maskData, setMaskData] = useState<string>("");
 
   const captureLastFrame = useCallback((file: File) => {
     const video = document.createElement("video");
@@ -23,7 +25,6 @@ const Index = () => {
     video.src = url;
 
     video.onloadedmetadata = () => {
-      // Seek to near the end
       video.currentTime = Math.max(0, video.duration - 0.1);
     };
 
@@ -46,6 +47,7 @@ const Index = () => {
   };
 
   const handleGenerate = () => {
+    if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
     setState("generating");
   };
 
@@ -60,33 +62,77 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background max-w-lg mx-auto relative overflow-hidden">
-      {/* Status bar spacer */}
-      <div className="h-2" />
+    <div className="min-h-screen mesh-gradient-bg max-w-lg mx-auto relative overflow-hidden">
+      {/* Top Nav */}
+      <div className="sticky top-0 z-50 glass-nav px-5 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center">
+            <Sparkles className="w-4 h-4 text-primary-foreground" />
+          </div>
+          <span className="font-bold text-foreground tracking-tight">AI Magic</span>
+        </div>
+        <span className="text-xs font-medium text-muted-foreground ios-pill bg-secondary/60">
+          {state === "upload" && "Ready"}
+          {state === "masking" && "Masking"}
+          {state === "generating" && "Processing"}
+          {state === "preview" && "Complete"}
+        </span>
+      </div>
 
       <AnimatePresence mode="wait">
         {state === "upload" && (
-          <motion.div key="upload" exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.2 }}>
+          <motion.div
+            key="upload"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -30 }}
+            transition={spring}
+          >
             <UploadCard onVideoSelect={captureLastFrame} />
           </motion.div>
         )}
 
         {state === "masking" && (
-          <motion.div key="masking" exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.2 }}>
-            <MaskingCanvas frameImage={lastFrame} onDone={handleMaskDone} />
-            <GenerateButton onGenerate={handleGenerate} />
+          <motion.div
+            key="masking"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -30 }}
+            transition={spring}
+          >
+            <MaskingCanvas
+              frameImage={lastFrame}
+              onDone={handleMaskDone}
+              onGenerate={handleGenerate}
+            />
           </motion.div>
         )}
 
         {state === "generating" && (
-          <motion.div key="generating" exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.2 }}>
+          <motion.div
+            key="generating"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={spring}
+          >
             <GenerateTimeline onComplete={handleGenerateComplete} />
           </motion.div>
         )}
 
         {state === "preview" && (
-          <motion.div key="preview" exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
-            <BeforeAfterSlider beforeImage={lastFrame} onReset={handleReset} />
+          <motion.div
+            key="preview"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={spring}
+          >
+            <BeforeAfterSlider
+              beforeImage={lastFrame}
+              maskData={maskData}
+              onReset={handleReset}
+            />
           </motion.div>
         )}
       </AnimatePresence>
