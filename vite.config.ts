@@ -5,6 +5,8 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  // Baris ini wajib ada supaya tidak blank di GitHub Pages
+  base: "/magic-mask-studio/",
   server: {
     host: "::",
     port: 8080,
